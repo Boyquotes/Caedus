@@ -1,0 +1,140 @@
+[gd_scene load_steps=7 format=3 uid="uid://vx8yxuikjtcq"]
+
+[ext_resource type="Script" path="res://world.gd" id="1_n3wjm"]
+[ext_resource type="Texture2D" uid="uid://bmy3u6f2g2hnj" path="res://ring.png" id="2_xegv4"]
+[ext_resource type="FontFile" uid="uid://cuxg2q2rxwvwf" path="res://VCR_OSD_MONO_1.001.ttf" id="3_jbu5j"]
+[ext_resource type="Script" path="res://game_over_msg.gd" id="4_uo3b5"]
+[ext_resource type="AudioStream" uid="uid://4tcvwmcy4hqg" path="res://music.wav" id="5_jkf0l"]
+[ext_resource type="AudioStream" uid="uid://batsvqtqreqqm" path="res://chirping.mp3" id="6_hb58o"]
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_n3wjm")
+
+[node name="Ring" type="Sprite2D" parent="."]
+position = Vector2(320, 400)
+scale = Vector2(1.32344, 1.45805)
+texture = ExtResource("2_xegv4")
+
+[node name="Area2D" type="Area2D" parent="Ring"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Ring/Area2D"]
+polygon = PackedVector2Array(-111.818, -10.9091, -73.6364, -30.9091, -25.4546, -35.4545, 30, -36.3636, 76.3636, -29.0909, 113.636, -11.8182, 116.364, 9.09091, 73.6364, 29.0909, 8.18182, 37.2727, -86.3636, 26.3636, -115.455, 6.36365)
+
+[node name="Ants" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Timer" type="Timer" parent="CanvasLayer"]
+autostart = true
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -83.0
+offset_top = 18.0
+offset_right = 127.0
+offset_bottom = 127.0
+grow_horizontal = 0
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("3_jbu5j")
+theme_override_font_sizes/font_size = 120
+text = "120"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOver" type="Node2D" parent="CanvasLayer"]
+position = Vector2(72, 177)
+script = ExtResource("4_uo3b5")
+
+[node name="Label2" type="Label" parent="CanvasLayer/GameOver"]
+offset_right = 1693.0
+offset_bottom = 218.0
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("3_jbu5j")
+theme_override_font_sizes/font_size = 120
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="next_char" type="Timer" parent="CanvasLayer/GameOver"]
+
+[node name="Button" type="Button" parent="CanvasLayer/GameOver"]
+visible = false
+offset_left = 1.0
+offset_top = 77.0
+offset_right = 504.0
+offset_bottom = 116.0
+theme_override_fonts/font = ExtResource("3_jbu5j")
+theme_override_font_sizes/font_size = 35
+text = "play again?"
+flat = true
+
+[node name="Win" type="Node2D" parent="CanvasLayer"]
+visible = false
+position = Vector2(26, 179)
+
+[node name="Label" type="Label" parent="CanvasLayer/Win"]
+offset_left = 44.0
+offset_right = 1755.0
+offset_bottom = 91.0
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("3_jbu5j")
+theme_override_font_sizes/font_size = 100
+text = "the insects died and you win!"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Label2" type="Label" parent="CanvasLayer/Win"]
+offset_left = 215.0
+offset_top = 30.0
+offset_right = 569.0
+offset_bottom = 121.0
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("3_jbu5j")
+theme_override_font_sizes/font_size = 100
+text = "score:"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Score" type="Label" parent="CanvasLayer/Win"]
+offset_left = 327.0
+offset_top = 30.0
+offset_right = 445.0
+offset_bottom = 121.0
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("3_jbu5j")
+theme_override_font_sizes/font_size = 100
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Button" type="Button" parent="CanvasLayer/Win"]
+visible = false
+offset_left = 1.0
+offset_top = 62.0
+offset_right = 584.0
+offset_bottom = 101.0
+theme_override_fonts/font = ExtResource("3_jbu5j")
+theme_override_font_sizes/font_size = 35
+text = "play again?"
+flat = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_jkf0l")
+volume_db = -5.0
+autoplay = true
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_hb58o")
+autoplay = true
+
+[connection signal="area_entered" from="Ring/Area2D" to="." method="_on_insects_entered"]
+[connection signal="area_exited" from="Ring/Area2D" to="." method="_on_insects_exited"]
+[connection signal="timeout" from="CanvasLayer/Timer" to="." method="_on_onesec_timeout"]
+[connection signal="timeout" from="CanvasLayer/GameOver/next_char" to="CanvasLayer/GameOver" method="_on_next_char_timeout"]
+[connection signal="pressed" from="CanvasLayer/GameOver/Button" to="." method="_on_play_again_pressed"]
+[connection signal="pressed" from="CanvasLayer/Win/Button" to="." method="_on_play_again_pressed"]
