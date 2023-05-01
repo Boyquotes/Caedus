@@ -1,3 +1,3 @@
-# insectum-caedus
-the source code for insectum caedus
-https://aushijo.itch.io/insectum-caedus
+# caedus
+the source code for caedus (originally insectum caedus)
+https://aushijo.itch.io/caedus
